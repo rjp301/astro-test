@@ -3,12 +3,14 @@ import RootLayout from "@/layouts/root-layout.astro";
 import AppLayout from "@/layouts/app-layout.astro";
 import Adder from "@/components/adder.tsx";
 import TodoList from "@/components/todo-list.tsx";
+import ListSwitcher from "@/components/list-switcher.tsx";
 ---
 
 <RootLayout>
   <AppLayout>
     <main class="container2 flex flex-col items-center gap-4 pt-6">
       <article class="flex w-full flex-col gap-4">
+        <ListSwitcher client:load />
         <Adder client:only="react" />
         <TodoList client:only="react" />
       </article>

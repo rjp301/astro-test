@@ -30,6 +30,22 @@ export const sessionTable = sqliteTable("user_session", {
 
 export type Session = typeof sessionTable.$inferSelect;
 
+export const listsTable = sqliteTable("list", {
+  id: text("id").$defaultFn(uuid).primaryKey().unique(),
+  name: text("name").notNull(),
+  userId: text("user_id", { length: 255 }).references(() => userTable.id, {
+    onDelete: "cascade",
+  }),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export type List = typeof listsTable.$inferSelect;
+export type ListInsert = typeof listsTable.$inferInsert;
+export const listSchema = createSelectSchema(listsTable);
+export const listInsertSchema = createInsertSchema(listsTable);
+
 export const todosTable = sqliteTable("todo", {
   id: text("id").$defaultFn(uuid).primaryKey().unique(),
   text: text("text").notNull(),
@@ -39,6 +55,9 @@ export const todosTable = sqliteTable("todo", {
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .default(false)
     .notNull(),
+  listId: text("list_id", { length: 255 }).references(() => listsTable.id, {
+    onDelete: "cascade",
+  }),
   userId: text("user_id", { length: 255 }).references(() => userTable.id, {
     onDelete: "cascade",
   }),
